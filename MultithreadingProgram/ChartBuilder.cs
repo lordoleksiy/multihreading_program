@@ -56,9 +56,9 @@ public class ChartBuilder
     private void BuildCharts()
     {
         
-        PngExporter.Export(GeneratePlot("Час виконання програми ПРГКБА", dataSet1), "plot1.png", 1280, 720);
-        PngExporter.Export(GeneratePlot("Графік поведінки КП", dataSet2), "plot2.png", 1280, 720);
-        PngExporter.Export(GeneratePlot("Графік поведінки КЕ", dataSet3), "plot3.png", 1280, 720);
+        PngExporter.Export(GeneratePlot("Час виконання програми ПРГКБА", dataSet1), $"plot1_{N}.png", 1280, 720);
+        PngExporter.Export(GeneratePlot("Графік поведінки КП", dataSet2), $"plot2_{N}.png", 1280, 720);
+        PngExporter.Export(GeneratePlot("Графік поведінки КЕ", dataSet3), $"plot3_{N}.png", 1280, 720);
     }
     private static PlotModel GeneratePlot(string name, IList<DataPoint> list)
     {
