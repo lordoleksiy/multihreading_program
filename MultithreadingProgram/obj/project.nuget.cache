@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "pCosdZDrLqw3kwExClhgjwjsrsY6FpGY289ew6xOpAtz9rNPXfDusu3BP0+z43x28FLZ6qNsjc+GxbnaFIlC0A==",
+  "success": true,
+  "projectFilePath": "D:\\Programming\\C#\\univer\\MultithreadingProgram\\MultithreadingProgram\\MultithreadingProgram.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lordo\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
+    "C:\\Users\\lordo\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
