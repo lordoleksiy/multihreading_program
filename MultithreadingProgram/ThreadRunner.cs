@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using MultithreadingProgram.Models;
 
 namespace MultithreadingProgram;
 
@@ -12,8 +13,8 @@ public class ThreadRunner
     private readonly ThreadHelper _threadHelper;
     private readonly Thread[] _threads;
 
-    public event Action OnStarted;
-    public event EventHandler<TimeSpan> OnFinished;
+    public event EventHandler<StartModel> OnStarted;
+    public event EventHandler<FinalModel> OnFinished;
     public ThreadRunner(int ThreadCount, int VectorSize)
     {
         ValidateData(ThreadCount, VectorSize);
@@ -35,14 +36,25 @@ public class ThreadRunner
     }
     public void Run() 
     {
+        var startModel = new StartModel()
+        {
+            P = _data.ThreadCount,
+            N = _data.VectorSize
+        };
         _stopwatch.Start();
-        OnStarted?.Invoke();
+        OnStarted?.Invoke(this, startModel);
 
         RunThreads();
 
         Array.ForEach(_threads, x => x.Join());
         _stopwatch.Stop();
-        OnFinished?.Invoke(this, _stopwatch.Elapsed);
+        var finalModel = new FinalModel()
+        {
+            P = _data.ThreadCount,
+            N = _data.VectorSize,
+            time = _stopwatch.Elapsed
+        };
+        OnFinished?.Invoke(this, finalModel);
     }
     private void RunThreads()
     {

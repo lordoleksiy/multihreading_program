@@ -1,4 +1,8 @@
-﻿namespace MultithreadingProgram;
+﻿using System.IO.Enumeration;
+using System.Text;
+using MultithreadingProgram.Models;
+
+namespace MultithreadingProgram;
 
 /**
 * Архітектура комп'ютерів 3
@@ -19,33 +23,64 @@
  */
 internal class Program
 {
-    private static readonly int P = 24; // кількість потоків
-    private static readonly int N = 1000;  // розмірність матриць і векторів
+    private static readonly int[] P = { 1, 2, 4, 8, 10, 12, 16 }; // кількість потоків
+    private static readonly int[] N = { 1200, 2400, 3600 };  // розмірність матриць і векторів
+    private static readonly string FilePath = "Results.txt";
+    private static readonly ICollection<string> results = new List<string>();
+    
     static void Main(string[] args)
     {
         try
         {
-            ThreadRunner runner = new ThreadRunner(P, N);
-            runner.OnStarted += OnProgramStarted;
-            runner.OnFinished += OnProgramFinished;
-            runner.Run();
-    }
+            RunProgram();
+            WriteToFile(results);
+            ChartBuilder chartBuilder = new(FilePath, N.Last());
+            chartBuilder.Run();
+        }
         catch (Exception e) 
         {
             Console.WriteLine($"Some error occured!\n{e.Message}");
         }
     }
 
-    public static void OnProgramFinished(object? sender, TimeSpan time)
+    public static void RunProgram()
     {
-        Console.WriteLine("Program is finished!");
-        Console.WriteLine($"Currunt Time: {DateTime.Now}");
-        Console.WriteLine($"Code execution time: {time}");
+        foreach (var p in P.AsEnumerable())
+        {
+            foreach (var n in N.AsEnumerable())
+            {
+                ThreadRunner runner = new ThreadRunner(p, n);
+                runner.OnStarted += OnProgramStarted;
+                runner.OnFinished += OnProgramFinished;
+                runner.Run();
+            }
+        }
+        if (!File.Exists(FilePath))
+        {
+            File.Create(FilePath);
+        }
     }
 
-    public static void OnProgramStarted()
+    public static void OnProgramFinished(object? sender, FinalModel model)
     {
-        Console.WriteLine("Program is stared!");
-        Console.WriteLine($"Currunt Time: {DateTime.Now}");
+        double seconds = Math.Round(model.time.TotalSeconds, 3);
+        Console.WriteLine($"Program is finished! N: {model.N}; P: {model.P}");
+        Console.WriteLine($"Code execution time: {seconds}");
+        results.Add($"P: {model.P}; N: {model.N} = {seconds}");
+    }
+
+    public static void OnProgramStarted(object? sender, StartModel model)
+    {
+        Console.WriteLine($"Program is stared! N: {model.N}; P: {model.P}");
+    }
+
+    private static void WriteToFile(IEnumerable<string> lines)
+    {
+
+        using StreamWriter writer = new(FilePath, false);
+        foreach (var line in lines)
+        {
+            writer.WriteLine(line);
+        }
     }
 }
